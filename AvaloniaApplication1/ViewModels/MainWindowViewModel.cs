@@ -13,9 +13,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private int _count;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     private string? _username;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     private string? _password;
 
     [ObservableProperty]
@@ -26,12 +28,14 @@ public partial class MainWindowViewModel : ViewModelBase
         _count++;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanLogin))]
     private async Task Login()
     {
         await Task.Delay(TimeSpan.FromSeconds(3));
         Greeting = "yay";
     }
+
+    private bool CanLogin() => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
 
     [RelayCommand]
     private void SetGreeting(string name)
